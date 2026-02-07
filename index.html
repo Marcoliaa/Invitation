@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💛</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffd700, #ffed4e, #fff8dc);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+        }
+
+        .question-page {
+            display: block;
+        }
+
+        .acceptance-page {
+            display: none;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #cc8800;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .question {
+            font-size: 2rem;
+            color: #996600;
+            margin-bottom: 3rem;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            min-height: 80px;
+        }
+
+        button {
+            padding: 1rem 3rem;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .yes-btn {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #996600;
+        }
+
+        .yes-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255,215,0,0.5);
+        }
+
+        .no-btn {
+            background: #fff;
+            color: #666;
+        }
+
+        .crying-cats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .crying-cat {
+            width: 150px;
+            height: 150px;
+            border-radius: 15px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .crying-cat.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 6s infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .acceptance-page h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .message {
+            font-size: 1.3rem;
+            color: #996600;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .bouquet {
+            font-size: 8rem;
+            margin: 2rem 0;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .celebration-hearts {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 3rem;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .random-yes-btn {
+            position: fixed;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #996600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <div class="container">
+        <!-- Question Page -->
+        <div class="question-page" id="questionPage">
+            <h1>💛 Valentine's Day 💛</h1>
+            <p class="question">Will you be my Valentine's date?</p>
+            
+            <div class="buttons">
+                <button class="yes-btn" onclick="acceptInvitation()">Yes! 💛</button>
+                <button class="no-btn" id="noBtn" onclick="handleNo()">No</button>
+            </div>
+
+            <div class="crying-cats" id="cryingCats">
+                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
+                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
+                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
+                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
+                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
+                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
+            </div>
+        </div>
+
+        <!-- Acceptance Page -->
+        <div class="acceptance-page" id="acceptancePage">
+            <h1>Thank You! 💛</h1>
+            <p class="message">
+                Thank you so much for accepting me as your Valentine's date this coming February 14! 
+                You've just made me the happiest person in the world! 
+                I can't wait to spend this special day with you! 💛
+            </p>
+            <div class="bouquet">🌻🌻🌻</div>
+            <div class="celebration-hearts">
+                💛 💛 💛 💛 💛
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let noClickCount = 0;
+        const randomYesButtons = [];
+
+        // Create floating hearts
+        function createHearts() {
+            const container = document.getElementById('heartsContainer');
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '💛';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 6 + 's';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        createHearts();
+
+        function handleNo() {
+            noClickCount++;
+            
+            // Show crying cats one by one
+            const cats = document.querySelectorAll('.crying-cat');
+            if (noClickCount <= cats.length) {
+                cats[noClickCount - 1].classList.add('show');
+            }
+
+            // Create Yes buttons endlessly every time No is clicked
+            createRandomYesButton();
+            createRandomYesButton(); // Create 2 buttons each time for more fun!
+        }
+
+        function createRandomYesButton() {
+            const btn = document.createElement('button');
+            btn.className = 'random-yes-btn';
+            btn.textContent = 'Yes! 💛';
+            btn.onclick = acceptInvitation;
+            
+            const maxX = window.innerWidth - 200;
+            const maxY = window.innerHeight - 100;
+            
+            btn.style.left = Math.random() * maxX + 'px';
+            btn.style.top = Math.random() * maxY + 'px';
+            
+            document.body.appendChild(btn);
+            randomYesButtons.push(btn);
+        }
+
+        function acceptInvitation() {
+            // Remove all random Yes buttons
+            randomYesButtons.forEach(btn => btn.remove());
+            
+            // Hide question page and show acceptance page
+            document.getElementById('questionPage').style.display = 'none';
+            document.getElementById('acceptancePage').style.display = 'block';
+
+            // Add more celebration hearts
+            const container = document.getElementById('heartsContainer');
+            container.innerHTML = '';
+            for (let i = 0; i < 50; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '💛';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                container.appendChild(heart);
+            }
+        }
+    </script>
+</body>
+</html>
