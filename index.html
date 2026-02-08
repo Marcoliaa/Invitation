@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will You Be My Valentine? 💛</title>
+    <title>A Letter For You</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #ffd700, #ffed4e, #fff8dc);
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -22,288 +22,337 @@
         }
 
         .container {
-            text-align: center;
-            padding: 2rem;
-            max-width: 600px;
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            perspective: 1000px;
         }
 
-        .question-page {
-            display: block;
-        }
-
-        .acceptance-page {
-            display: none;
-        }
-
-        h1 {
-            font-size: 3rem;
-            color: #cc8800;
-            margin-bottom: 2rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .question {
-            font-size: 2rem;
-            color: #996600;
-            margin-bottom: 3rem;
-            font-weight: bold;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-            min-height: 80px;
-        }
-
-        button {
-            padding: 1rem 3rem;
-            font-size: 1.5rem;
-            border: none;
-            border-radius: 50px;
+        /* Envelope */
+        .envelope {
+            position: relative;
+            width: 400px;
+            height: 280px;
+            margin: 0 auto;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
         }
 
-        .yes-btn {
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            color: #996600;
+        .envelope:hover {
+            transform: translateY(-5px);
         }
 
-        .yes-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(255,215,0,0.5);
+        .envelope.clicked {
+            cursor: default;
+            animation: envelopeMove 1s ease forwards;
         }
 
-        .no-btn {
-            background: #fff;
-            color: #666;
+        @keyframes envelopeMove {
+            to {
+                transform: translateY(-100px) scale(0.8);
+                opacity: 0.3;
+            }
         }
 
-        .crying-cats {
+        .envelope-back {
+            position: absolute;
+            width: 400px;
+            height: 280px;
+            background: #f9ca24;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 200px solid transparent;
+            border-right: 200px solid transparent;
+            border-top: 140px solid #f0b90b;
+            transform-origin: top center;
+            z-index: 2;
+        }
+
+        .envelope.clicked .envelope-flap {
+            animation: flapOpen 0.8s ease forwards;
+        }
+
+        @keyframes flapOpen {
+            to {
+                transform: rotateX(180deg);
+            }
+        }
+
+        .envelope-front {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 200px solid transparent;
+            border-right: 200px solid transparent;
+            border-bottom: 140px solid #f9ca24;
+            z-index: 3;
+        }
+
+        /* Heart Seal */
+        .seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            z-index: 4;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .seal:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .wax-seal {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, #e74c3c, #c0392b);
+            border-radius: 50%;
+            box-shadow: 
+                0 5px 20px rgba(231, 76, 60, 0.5),
+                inset 0 -3px 10px rgba(0, 0, 0, 0.3),
+                inset 0 3px 10px rgba(255, 255, 255, 0.2);
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
+            align-items: center;
             justify-content: center;
-            margin-top: 2rem;
         }
 
-        .crying-cat {
-            width: 150px;
-            height: 150px;
-            border-radius: 15px;
-            object-fit: cover;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            display: none;
+        .wax-seal::before {
+            content: "";
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.1);
         }
 
-        .crying-cat.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
+        .wax-seal::after {
+            content: "♥";
+            font-size: 45px;
+            color: rgba(0, 0, 0, 0.3);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+            position: relative;
+            top: 2px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+        .seal.break {
+            animation: sealBreak 0.6s ease forwards;
         }
 
-        .hearts-container {
+        @keyframes sealBreak {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.3) rotate(10deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        /* Letter */
+        .letter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 450px;
+            max-width: 90vw;
+            background: #fff8e1;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .letter.show {
+            animation: letterAppear 0.8s ease 0.6s forwards;
+        }
+
+        @keyframes letterAppear {
+            to {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .letter-header {
+            text-align: center;
+            color: #e74c3c;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .letter-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 16px;
+            text-align: justify;
+        }
+
+        .letter-content p {
+            margin-bottom: 15px;
+        }
+
+        .letter-signature {
+            text-align: right;
+            margin-top: 30px;
+            font-style: italic;
+            color: #e74c3c;
+            font-size: 18px;
+        }
+
+        .hearts-decoration {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            overflow: hidden;
-            z-index: -1;
+            z-index: 1;
+            opacity: 0;
         }
 
-        .heart {
+        .hearts-decoration.show {
+            animation: heartsShow 1s ease forwards;
+        }
+
+        @keyframes heartsShow {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .floating-heart {
             position: absolute;
-            font-size: 2rem;
-            animation: float 6s infinite;
+            font-size: 20px;
+            animation: float 4s ease-in-out infinite;
             opacity: 0.6;
         }
 
         @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
             }
             50% {
-                opacity: 0.6;
+                transform: translateY(-20px) rotate(10deg);
             }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        .acceptance-page h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .message {
-            font-size: 1.3rem;
-            color: #996600;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .bouquet {
-            font-size: 8rem;
-            margin: 2rem 0;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .celebration-hearts {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            font-size: 3rem;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .random-yes-btn {
-            position: fixed;
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            color: #996600;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 1000;
-            animation: pulse 1s infinite;
         }
     </style>
 </head>
 <body>
-    <div class="hearts-container" id="heartsContainer"></div>
-
     <div class="container">
-        <!-- Question Page -->
-        <div class="question-page" id="questionPage">
-            <h1>💛 Valentine's Day 💛</h1>
-            <p class="question">Will you be my Valentine's date?</p>
+        <!-- Envelope -->
+        <div class="envelope" id="envelope">
+            <div class="envelope-back"></div>
+            <div class="envelope-flap"></div>
+            <div class="envelope-front"></div>
             
-            <div class="buttons">
-                <button class="yes-btn" onclick="acceptInvitation()">Yes! 💛</button>
-                <button class="no-btn" id="noBtn" onclick="handleNo()">No</button>
-            </div>
-
-            <div class="crying-cats" id="cryingCats">
-                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
-                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
-                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
-                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
-                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
-                <img class="crying-cat" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23fff8dc' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em'%3E😿%3C/text%3E%3C/svg%3E" alt="Crying cat">
+            <!-- Heart Seal -->
+            <div class="seal" id="seal">
+                <div class="wax-seal"></div>
             </div>
         </div>
 
-        <!-- Acceptance Page -->
-        <div class="acceptance-page" id="acceptancePage">
-            <h1>Thank You! 💛</h1>
-            <p class="message">
-                Thank you so much for accepting me as your Valentine's date this coming February 14! 
-                You've just made me the happiest person in the world! 
-                I can't wait to spend this special day with you! 💛
-            </p>
-            <div class="bouquet">🌻🌻🌻</div>
-            <div class="celebration-hearts">
-                💛 💛 💛 💛 💛
+        <!-- Letter -->
+        <div class="letter" id="letter">
+            <div class="letter-header">💛 For Jhamaica Mae Fernandez 💛</div>
+            <div class="letter-content">
+                <p>Dear Love,</p>
+                <p>
+                    Hello Jham, probably nasabi ko na sayo na pinalitan ko yung content nitong website for invitation.
+                    Obviously, andito ka now binabasa mo na 'to. Umpisahan ko 'to sa pagsasalamat sayo love.
+                    For giving me another chance na maitama yung mga pagkakamali and atraso ko sa inyo ni thalia.
+                    Also, thank you for making me feel loved again. I mean ikaw lang naman kasi palagi.
+                    Ikaw yung palaging nagbibigay ng love na kailangan and hinahanap ko. Sayo ko yun laging nafefeel.
+                    I honestly don't know what's wrong with me nung time na iniwan kita and sinabi kong I don't have any feelings for you.
+                </p>
+                <p>
+                    Ngayon kaya ako nandito, bumabalik sayo, kay thalia, I seriously want you and thalia na maging part na ng buhay ko.
+                    Hindi temporarily, pero pang habang buhay. I can't see myself having another baby girl like thalia, and having another woman like you love.
+                    I may not be the most handsome and most wealthy, but I'll be the most loving, most understanding and most caring. 
+                    Right now, walang wala man ako, nakita ko kung paano mo ko pinipili despite all the flaws na meron ako.
+                    How you consistently boosting my confidence. I am so grateful to have someone like you sa buhay ko love.
+                    Hindi ko man masuklian yung mga ibinibigay mo sa ngayon, pero hindi ako papayag na walang babalik sayo love.
+                    Because you clearly deserves more, better, and the bestest.
+                </p>
+                <p>
+                    Thank you for being exactly who you are. For your gentle heart, 
+                    your beautiful soul, and for making my life infinitely better 
+                    just by being in it. Thank you for raising thalia. Thank you for loving her.
+                    Kung mayroon man akong taong pinagpapasalamatan and most proud of, ikaw yun love. You only.
+                    I really wish na itong pag memeet natin ulit is hindi na matatapos or mapuputol.
+                    Cheers! For thalia, For us.
+                </p>
+                <p>
+                    Simple man 'tong valentines gift ko sayo, sana enough na 'to for now.
+                    Sana mapangiti ka nito. Sana mapasaya nito kahit kaunti yung puso mo.
+                    Gusto ko lang din laging ipaalala sayo na...
+                    You are loved more than words can express.
+                    Palagi ka naming ma-aappreciate ng anak natin.
+                    Thank you for existing.
+                    I love you.
+                </p>
+            </div>
+            <div class="letter-signature">
+                With all my heart,<br>
+                MJ 💕
             </div>
         </div>
     </div>
 
+    <!-- Floating Hearts Decoration -->
+    <div class="hearts-decoration" id="hearts">
+        <div class="floating-heart" style="left: 10%; top: 20%;">💛</div>
+        <div class="floating-heart" style="left: 80%; top: 30%; animation-delay: 1s;">💛</div>
+        <div class="floating-heart" style="left: 15%; top: 70%; animation-delay: 2s;">💛</div>
+        <div class="floating-heart" style="left: 85%; top: 60%; animation-delay: 1.5s;">💛</div>
+        <div class="floating-heart" style="left: 50%; top: 10%; animation-delay: 0.5s;">💛</div>
+    </div>
+
     <script>
-        let noClickCount = 0;
-        const randomYesButtons = [];
+        const seal = document.getElementById('seal');
+        const envelope = document.getElementById('envelope');
+        const letter = document.getElementById('letter');
+        const hearts = document.getElementById('hearts');
 
-        // Create floating hearts
-        function createHearts() {
-            const container = document.getElementById('heartsContainer');
-            for (let i = 0; i < 20; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.textContent = '💛';
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.animationDelay = Math.random() * 6 + 's';
-                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-                container.appendChild(heart);
-            }
-        }
-
-        createHearts();
-
-        function handleNo() {
-            noClickCount++;
+        seal.addEventListener('click', function() {
+            // Break the seal
+            seal.classList.add('break');
             
-            // Show crying cats one by one
-            const cats = document.querySelectorAll('.crying-cat');
-            if (noClickCount <= cats.length) {
-                cats[noClickCount - 1].classList.add('show');
-            }
-
-            // Create Yes buttons endlessly every time No is clicked
-            createRandomYesButton();
-            createRandomYesButton(); // Create 2 buttons each time for more fun!
-        }
-
-        function createRandomYesButton() {
-            const btn = document.createElement('button');
-            btn.className = 'random-yes-btn';
-            btn.textContent = 'Yes! 💛';
-            btn.onclick = acceptInvitation;
+            // Animate envelope
+            setTimeout(() => {
+                envelope.classList.add('clicked');
+            }, 300);
             
-            const maxX = window.innerWidth - 200;
-            const maxY = window.innerHeight - 100;
+            // Show letter
+            setTimeout(() => {
+                letter.classList.add('show');
+            }, 600);
             
-            btn.style.left = Math.random() * maxX + 'px';
-            btn.style.top = Math.random() * maxY + 'px';
-            
-            document.body.appendChild(btn);
-            randomYesButtons.push(btn);
-        }
-
-        function acceptInvitation() {
-            // Remove all random Yes buttons
-            randomYesButtons.forEach(btn => btn.remove());
-            
-            // Hide question page and show acceptance page
-            document.getElementById('questionPage').style.display = 'none';
-            document.getElementById('acceptancePage').style.display = 'block';
-
-            // Add more celebration hearts
-            const container = document.getElementById('heartsContainer');
-            container.innerHTML = '';
-            for (let i = 0; i < 50; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.textContent = '💛';
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.animationDelay = Math.random() * 2 + 's';
-                heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
-                container.appendChild(heart);
-            }
-        }
+            // Show floating hearts
+            setTimeout(() => {
+                hearts.classList.add('show');
+            }, 1000);
+        });
     </script>
 </body>
 </html>
